@@ -1723,7 +1723,7 @@ public class HomeController implements Controller {
       labelController.modifyLabels();
     } 
     
-    // Add a undoable edit to change presentation name
+    // Add an undoable edit to change presentation name
     undoSupport.postEdit(new AbstractUndoableEdit() {      
         @Override
         public void redo() throws CannotRedoException {
