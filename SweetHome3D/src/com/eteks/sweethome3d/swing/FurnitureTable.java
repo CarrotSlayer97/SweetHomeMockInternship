@@ -737,7 +737,7 @@ public class FurnitureTable extends JTable implements View, Printable {
         public Component getTableCellRendererComponent(JTable table, Object value, 
                                    boolean isSelected, boolean hasFocus, int row, int column) {
           // Delegate rendering to default cell renderer
-          JLabel headerRendererLabel = (JLabel)defaultRenderer.getTableCellRendererComponent(table, value, 
+          JLabel headerRendererLabel = (JLabel)defaultRenderer.getTableCellRendererComponent(table, value,
               isSelected, hasFocus, row, column);
           // Don't display sort icon
           headerRendererLabel.setIcon(null);
@@ -750,9 +750,24 @@ public class FurnitureTable extends JTable implements View, Printable {
           return headerRendererLabel;
         }
       };
+    List<TableColumn> printedColumns = new ArrayList<TableColumn>();
+    boolean levelColumnDisplayed = false;
     for (int columnIndex = 0, n = columnModel.getColumnCount(); columnIndex < n; columnIndex++) {
-      final TableColumn tableColumn = columnModel.getColumn(columnIndex);
+      //final TableColumn tableColumn = columnModel.getColumn(columnIndex);
       // Create a printable column from existing table column
+      TableColumn tableColumn = columnModel.getColumn(columnIndex);
+      printedColumns.add(tableColumn);
+      levelColumnDisplayed |= HomePieceOfFurniture.SortableProperty.LEVEL.equals(tableColumn.getIdentifier());
+    }
+    if (!levelColumnDisplayed
+            && columnModel instanceof FurnitureTableColumnModel) {
+      TableColumn levelColumn = ((FurnitureTableColumnModel)columnModel).availableColumns.get(
+              HomePieceOfFurniture.SortableProperty.LEVEL);
+      if (levelColumn != null) {
+        printedColumns.add(levelColumn);
+      }
+    }
+    for (final TableColumn tableColumn : printedColumns) {
       TableColumn printableColumn = new TableColumn();
       printableColumn.setIdentifier(tableColumn.getIdentifier());
       printableColumn.setHeaderValue(tableColumn.getHeaderValue());
